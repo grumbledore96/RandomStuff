@@ -39,6 +39,15 @@ def executeQuery(connection, query):
     except Error as err:
         print("Error: ", err)
 
+def readQuery(connection, query):
+    cursor = connection.cursor()
+    result = None
+    try:
+        cursor.execute(query)
+        result = cursor.fetchall()
+        return result
+    except Error as err:
+        print("Error: ", err)
 
 def createTable(connection):
     query = """CREATE TABLE games (
@@ -93,5 +102,5 @@ def readCSV(connection):
 
 connection = createServerConnection()
 connection = connectDB()
-readCSV(connection)
+
 
