@@ -3,7 +3,7 @@ from mysql.connector import Error
 import pandas as pd
 import csv
 
-connection = None
+
 gamesArray = []
 
 def createServerConnection():
@@ -96,7 +96,8 @@ def readCSV(connection):
     query+=";"
     print(query)
     
-def showAll(connection):
+def showAll():
+    connection = connectDB()
     query = """
     SELECT *
     FROM games;
@@ -105,12 +106,35 @@ def showAll(connection):
     for result in results:
         print(result)
             
+def searchGame(game):
+    connection = connectDB()
+    query ="""
+    SELECT * FROM games
+    WHERE game LIKE \'%{name}%\';""".format(name = game)
+    results = readQuery(connection, query)
+    for result in results:
+        print(result)
 
+def searchConsole(console):
+    connection = connectDB()
+    query ="""
+    SELECT * FROM games
+    WHERE console LIKE \'%{name}%\';""".format(name = console)
+    results = readQuery(connection, query)
+    for result in results:
+        print(result)
 
+def Help():
+    print("""You can type searchGame(game) {where game is a string}
+            to search for games, for example typing "ze" will return
+            games that contain ze so \"Legend of zelda\" etc
+            searchConsole does the same thing with a console
+            for example searchConsole(\"x\") will return xbox and xbox360 
+            games""")
 
-    
 
 connection = createServerConnection()
 connection = connectDB()
-showAll(connection)
+showAll()
+print("Type Help() for help.")
 
