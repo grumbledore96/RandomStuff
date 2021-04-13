@@ -13,7 +13,7 @@ def createServerConnection():
             user="Grumbledore",
             passwd="password"
         )
-        print("I'm in")
+        print("Connection established.")
     except Error as err:
         print("Error: ", err)
 
@@ -31,7 +31,7 @@ def createDatabase(connection):
 
 
 def executeQuery(connection, query):
-    cursor = connection.cursor()
+    cursor = connection.cursor(buffered=True)
     try:
         cursor.execute(query)
         connection.commit()
@@ -40,7 +40,7 @@ def executeQuery(connection, query):
         print("Error: ", err)
 
 def readQuery(connection, query):
-    cursor = connection.cursor()
+    cursor = connection.cursor(buffered=True)
     result = None
     try:
         cursor.execute(query)
@@ -83,7 +83,6 @@ def readCSV(connection):
                 gamesArray.append(row[0])
                 gamesArray.append(row[1])
             lineCount+=1
-            
     index = 0
     for i in range(0, (len(gamesArray)),2):
         if i != len(gamesArray)-2:
@@ -96,11 +95,22 @@ def readCSV(connection):
             index+=1
     query+=";"
     print(query)
+    
+def showAll(connection):
+    query = """
+    SELECT *
+    FROM games;
+"""
+    results = readQuery(connection, query)
+    for result in results:
+        print(result)
+            
 
-    executeQuery(connection, query)
+
+
     
 
 connection = createServerConnection()
 connection = connectDB()
-
+showAll(connection)
 
