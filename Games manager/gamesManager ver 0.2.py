@@ -51,9 +51,10 @@ def readQuery(connection, query):
 
 def createTable(connection):
     query = """CREATE TABLE games (
-                Games_id INT PRIMARY KEY,
+                Games_id INT NOT NULL AUTO_INCREMENT,
                 Game VARCHAR(255) NOT NULL,
-                Console VARCHAR (255) NOT NULL
+                Console VARCHAR (255) NOT NULL,
+                PRIMARY KEY(Games_id)
                 );
                 """
     executeQuery(connection, query)
@@ -74,7 +75,7 @@ def connectDB():
     return connection
 
 def readCSV(connection):
-    query = "INSERT INTO games VALUES\n"
+    query = "INSERT INTO games (Game, Console) VALUES\n"
     with open('gamesManager.csv', 'r') as csvFile:
         csvReader = csv.reader(csvFile, delimiter=',')
         lineCount = 0
@@ -83,18 +84,16 @@ def readCSV(connection):
                 gamesArray.append(row[0])
                 gamesArray.append(row[1])
             lineCount+=1
-    index = 0
     for i in range(0, (len(gamesArray)),2):
         if i != len(gamesArray)-2:
-            string = "({indexx}, '{one}', '{two}'),\n".format(indexx = index, one = gamesArray[i].replace('\'', ''), two = gamesArray[i+1])
+            string = "('{one}', '{two}'),\n".format(one = gamesArray[i].replace('\'', ''), two = gamesArray[i+1])
             query+= str(string)
-            index+=1
         else:
-            string = "({indexx}, '{one}', '{two}')".format(indexx = index, one = gamesArray[i].replace('\'', ''), two = gamesArray[i+1])
+            string = "('{one}', '{two}')".format(one = gamesArray[i].replace('\'', ''), two = gamesArray[i+1])
             query+= str(string)
-            index+=1
     query+=";"
     print(query)
+    executeQuery(connection, query)
     
 def showAll():
     connection = connectDB()
@@ -107,7 +106,8 @@ def showAll():
         print(result)
             
 def searchGame(game):
-    connection = connectDB()
+    connection = connectDB()#While inefficient more user friendly
+                            #So remove once the rest of the ui is user friendly
     query ="""
     SELECT * FROM games
     WHERE game LIKE \'%{name}%\';""".format(name = game)
@@ -116,13 +116,21 @@ def searchGame(game):
         print(result)
 
 def searchConsole(console):
-    connection = connectDB()
-    query ="""
+    connection = connectDB() #While inefficient more user friendly
+                            #So remove once the rest of the ui is user friendly
+    query ="""  
     SELECT * FROM games
     WHERE console LIKE \'%{name}%\';""".format(name = console)
     results = readQuery(connection, query)
     for result in results:
         print(result)
+
+def addGame(gameName, console):
+    connection = connectDB()#While inefficient more user friendly,
+                            #So remove once the rest of the ui is user friendly
+    query = """INSERT INTO Games (game, console)
+                VALUES('{name}','{c}');""" .format(name=gameName,c = console)
+    executeQuery(connection, query)
 
 def Help():
     print("""You can type searchGame(game) {where game is a string}
