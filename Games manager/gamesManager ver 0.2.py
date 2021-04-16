@@ -138,7 +138,8 @@ def Help():
             games that contain ze so \"Legend of zelda\" etc
             searchConsole does the same thing with a console
             for example searchConsole(\"x\") will return xbox and xbox360 
-            games""")
+            games
+            You can also add a game by using addGame(gameName, console)""")
 
 
 connection = createServerConnection()
