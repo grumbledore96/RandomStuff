@@ -132,6 +132,16 @@ def addGame(gameName, console):
                 VALUES('{name}','{c}');""" .format(name=gameName,c = console)
     executeQuery(connection, query)
 
+def removeGame(gameName):
+    connection = connectDB()
+    query= """DELETE FROM games WHERE game = '{name}';""".format(name = gameName)
+    executeQuery(connection,query)
+
+def removeConsole(console):
+    connection = connectDB()
+    query= """DELETE FROM games WHERE console = '{name}';""".format(name = console)
+    executeQuery(connection,query)
+
 def Help():
     print("""You can type searchGame(game) {where game is a string}
             to search for games, for example typing "ze" will return
